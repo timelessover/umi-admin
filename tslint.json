@@ -1,0 +1,15 @@
+{
+    "extends": ["tslint-react"],
+    "rules": {
+      // override tslint-react rules here
+      "jsx-wrap-multiline": false,
+      "jsx-no-multiline-js": false,
+      "member-access": false,
+      "ordered-imports": false,
+      "quotemark": false,
+      "no-console": false,
+      "semicolon": false,
+      "jsx-no-lambda": false,
+      "jsx-alignment": false
+    }
+  }
