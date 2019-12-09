@@ -1,7 +1,7 @@
 import * as usersService from '../services/index';
 
 export default {
-    namespace: 'index',
+    namespace: 'count',
     state: {
         name:'xxx'
     },

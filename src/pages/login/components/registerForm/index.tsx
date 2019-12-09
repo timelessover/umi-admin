@@ -8,41 +8,34 @@ import { post } from '../../../../utils/request'
 
 
 const RegisterForm = (props) => {
+
     const handleSubmit = e => {
         e.preventDefault();
         props.form.validateFields((err, values) => {
             if (!err) {
-                post('login', values).then(res => {
-                    switch (res.status) {
-                        case '0':
-                            props.dispatch({ type: 'user/updateUser', payload: { username: res.name } })
-                            localStorage.setItem('token','Bearer ' + res.token)
-                            router.push('/index')
-                            break; 
-                        case '1':
-                            message.error('密码错误');
-                            break;
-                        case '2':
-                            message.error('用户名错误');
-                            break;
-                        default:
-                            break;
+                post('register', values).then(res => {
+                    if (res.status === 'ok') {
+                        message.success('注册成功');
+                        props.dispatch({ type: 'login/changeStatus', payload: { status: 0 } })
+                    }else{
+                        message.error('注册失败，用户名重复');
                     }
+                }).catch(err => {
+                    message.error('注册失败，网络出现故障');
                 })
             }
         });
     };
 
-    const goRegister = () => {
-        props.dispatch({ type: 'login/changeStatus', payload: { status: 1 } })
+    const goLogin = () => {
+        props.dispatch({ type: 'login/changeStatus', payload: { status: 0 } })
     }
-
 
     const { getFieldDecorator } = props.form;
 
     return (
         <>
-            <h3 className={styles.title}>管理员登陆{props.user}</h3>
+            <h3 className={styles.title}>管理员注册</h3>
             <Form onSubmit={handleSubmit} className={styles['login-form']}>
                 <Form.Item>
                     {getFieldDecorator('username', {
@@ -67,9 +60,9 @@ const RegisterForm = (props) => {
                 </Form.Item>
                 <div className={styles['register-link-box']}>
                     <Form.Item >
-                        <Button type="primary" htmlType="submit" className={styles['login-form-button']}>登陆</Button>
+                        <Button type="primary" htmlType="submit" className={styles['login-form-button']}>注册</Button>
                     </Form.Item>
-                    <span onClick={goRegister} className={styles['link']}>注册</span>
+                    <span onClick={goLogin} className={styles['link']}>返回登陆</span>
                 </div>
             </Form>
         </>
@@ -77,8 +70,7 @@ const RegisterForm = (props) => {
 }
 
 function mapStateToProps(state) {
-
-    return { ...state.login, ...state.user }
+    return state.login
 }
 
 

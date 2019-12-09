@@ -1,4 +1,5 @@
 import { fetch } from 'dva';
+const host = 'http://127.0.0.1:7001/'
 
 function checkStatus(response) {
     if (response.status >= 200 && response.status < 300) {
@@ -17,21 +18,36 @@ function checkStatus(response) {
  * @param  {object} [options] The options we want to pass to "fetch"
  * @return {object}           An object containing either "data" or "err"
  */
-export default async function request(url, options) {
-    const response = await fetch(url, options);
+export const post = async (url, params) => {
+    const options = {
+        method: 'POST',
+        body: JSON.stringify(params),
+        headers: {
+            'content-type': 'application/json',
+            'Authorization': localStorage.getItem('token') || ''
+        }
+    }
+
+    const response = await fetch(host + url, options);
 
     checkStatus(response);
 
     const data = await response.json();
 
-    const ret = {
-        data,
-        headers: {},
-    };
+    return data;
+};
 
-    if (response.headers.get('x-total-count')) {
-        ret.headers['x-total-count'] = response.headers.get('x-total-count');
+export const get = async (url) => {
+
+    const options = {
+        'Authorization': JSON.parse(localStorage.getItem('token')) || ''
     }
 
-    return ret;
+    const response = await fetch(host + url, options);
+
+    checkStatus(response);
+
+    const data = await response.json();
+
+    return data;
 };

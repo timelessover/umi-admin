@@ -9,15 +9,13 @@ const config: IConfig = {
       path: '/index',
       component: '../layouts/main/index',
       routes: [
-        { path: '/index', component: '../pages/main/index' },
-        { path: '/index/users', component: '../pages/main/users' }
-      ]
+        { path: '/index', component: '../pages/main/index' }      ]
     },
     {
       path: '/login',
       component: '../layouts/login/index',
       routes: [
-        { path: '/login/register', component: '../pages/login/index' },
+        { path: '/login', component: '../pages/login/index' },
       ]
     }
   ],

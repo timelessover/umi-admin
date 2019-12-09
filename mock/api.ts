@@ -1,5 +1,5 @@
 export default {
-    'GET /api/users': { name: 'chris', age: 18 },
+    'POST /api/users': { name: 'chris', age: 18 },
 
     // GET POST 可省略
     '/api/users/1': { id: 1 },
