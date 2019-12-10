@@ -5,11 +5,18 @@ const config: IConfig = {
   history: 'hash',
   treeShaking: true,
   routes: [
-    {
+    { 
       path: '/index',
+      icon: 'laptop',
       component: '../layouts/main/index',
+      Routes: ['./src/routes/MainPrivateRoute.js'], 
       routes: [
-        { path: '/index', component: '../pages/main/index' }      ]
+        { path: '/index/home', component: '../pages/main/index',icon: 'laptop',title: '首页'},
+        { path: '/index/general', component: '../pages/main/index',icon: 'laptop',title: '基本组件'},
+        { path: '/index/general/icon', component: '../pages/main/index',icon: '',title: '图标'},
+        { path: '/index/text', component: '../pages/main/index',icon: 'laptop',title: 'test'},
+        { path: '/index/text/icon', component: '../pages/main/index',icon: '',title: 'test'},
+      ]
     },
     {
       path: '/login',

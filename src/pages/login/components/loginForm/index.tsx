@@ -17,7 +17,7 @@ const RegisterForm = (props) => {
                         case '0':
                             props.dispatch({ type: 'user/updateUser', payload: { username: res.name } })
                             localStorage.setItem('token','Bearer ' + res.token)
-                            router.push('/index')
+                            router.push('/index/home')
                             break; 
                         case '1':
                             message.error('密码错误');
@@ -77,7 +77,6 @@ const RegisterForm = (props) => {
 }
 
 function mapStateToProps(state) {
-
     return { ...state.login, ...state.user }
 }
 

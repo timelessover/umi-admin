@@ -1,0 +1,38 @@
+.trigger {
+    font-size: 18px;
+    line-height: 64px;
+    padding: 0 24px;
+    cursor: pointer;
+    transition: color 0.3s;
+    &:hover {
+      color: #1890ff;
+    }
+  }
+  .header-ul {
+    display: -webkit-flex;
+    display: flex;
+    width: 200px;
+
+    >li {
+        flex-grow: 1;
+        text-align: center;
+        >img {
+            width: 40px;
+            height: 40px;
+            border-radius: 100px;
+        }
+    }
+
+    .menu-group {
+        >.menu {
+            line-height: 2em;
+            padding: 0 10px;
+        }
+
+        >li {
+            padding: 0 24px;
+            line-height: 2em;
+            
+        }
+    }
+}

@@ -4,9 +4,9 @@ import Link from 'umi/link';
 import { connect } from 'dva';
 
 const MainPage = (props) => {
-  useEffect(() => {
-    console.log(props)
-  }, [])
+  // useEffect(() => {
+  //   console.log(props)
+  // }, [])
   return (
     <div className={styles.container}>
       <div>登陆成功{props.username}</div>
