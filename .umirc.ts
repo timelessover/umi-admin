@@ -5,17 +5,28 @@ const config: IConfig = {
   history: 'hash',
   treeShaking: true,
   routes: [
-    { 
+    {
       path: '/index',
       icon: 'laptop',
       component: '../layouts/main/index',
-      Routes: ['./src/routes/MainPrivateRoute.js'], 
+      Routes: ['./src/routes/MainPrivateRoute.js'],
       routes: [
-        { path: '/index/home', component: '../pages/main/index',icon: 'laptop',title: '首页'},
-        { path: '/index/general', component: '../pages/main/index',icon: 'laptop',title: '基本组件'},
-        { path: '/index/general/icon', component: '../pages/main/index',icon: '',title: '图标'},
-        { path: '/index/text', component: '../pages/main/index',icon: 'laptop',title: 'test'},
-        { path: '/index/text/icon', component: '../pages/main/index',icon: '',title: 'test'},
+        { path: '/index/home', component: '../pages/main/Home', icon: 'laptop', title: '首页' },
+        {
+          path: '/index/general', icon: 'laptop', title: '基本组件',
+          routes: [
+            { path: '/index/general/icon', component: '../pages/main/General/IconDemo/index', icon: '', title: '图标' },
+            {
+              path: '/index/general/button', component: '../pages/main/General/ButtonDemo/index', icon: '', title: '按钮'
+            },
+          ]
+        },
+
+        {
+          path: '/index/text', component: '../pages/main/index', icon: 'laptop', title: 'test', routes: [
+            { path: '/index/text/icon', component: '../pages/main/index', icon: '', title: 'test' },
+          ]
+        },
       ]
     },
     {

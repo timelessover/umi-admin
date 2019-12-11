@@ -21,46 +21,72 @@ const BasicLayout: React.FC = props => {
   };
 
   useEffect(() => {
-    getMenu(props.route.routes)
-  }, [props.route.routes])
+    // 需要深拷贝一下
+    const routes = JSON.parse(JSON.stringify(props.route.routes))
+    getMenu(routes)
+  }, [])
 
   useEffect(() => {
     getBreadCrumb()
   }, [props.location.pathname])
 
   const getMenu = (routes) => {
+    routes.pop()
+    const result = getSubMenu(routes)
+    setMenu(result)
+  }
+
+  const getSubMenu = (routes) => {
+    if (!routes) return;
     const result = []
-    const mainMenu = routes.filter(item => item.title && item.path.split('/').length == 3)
-    const subMenu = routes.filter(item => item.title && item.path.split('/').length == 4)
-    mainMenu.map(item => {
+    routes.map(item => {
       let temp = {}
       temp.path = item.path
       temp.icon = item.icon
       temp.title = item.title
-      temp.subs = subMenu.filter(key => key.path.split('/')[2] == item.path.split('/')[2])
+      // 去除最后一个umi对象
+      item.routes && item.routes.pop()
+      temp.subs = item.routes && getSubMenu(item.routes)
       result.push(temp)
     })
-    setMenu(result)
-    console.log(menu)
+    return result
   }
 
+
   const getBreadCrumb = () => {
-    // 支持两层导航
-    const mainBread = props.location.pathname.split('/')
-    if (mainBread.length >= 4) {
-      mainBread.pop()
-      const routes = props.route.routes
-      const firstTitle = routes.filter(item => item.path === mainBread.join('/'))[0].title || ''
-      const secondTitle = routes.filter(item => item.path === props.location.pathname)[0].title
-      setBread([firstTitle, secondTitle])
-    }else{
+    const mainBread = props.location.pathname.split('/'); 
+    const lens = mainBread.length
+    let routes = props.route.routes
+    const result = []
+    const titleArr = []
+    let index = 3 // 默认为3
+    const getTitle = (routes, path) => {
+      return routes.filter(item => item.path === path)[0]
+    }
+    // 收集所有子标题所有父标题
+    while (index <= lens) {
+      let temp = []
+      for (let i = 0; i < index; i++) {
+        temp.push(mainBread[i])
+      }
+      result.push(temp.join('/'))
+      index++
+    }
+    // 筛选出每个标题的 title
+    for (let i = 0; i < result.length; i++) {
+      const current = getTitle(routes, result[i])
+      titleArr.push(current.title)
+      routes = current.routes
+    }
+    if (titleArr[0] !== '首页') {
+      setBread(titleArr)
+    } else {
       setBread([])
     }
-
   }
 
   return (
-    <Layout style={{ height: '100vh' }}>
+    <Layout style={{ minHeight: '100vh' }}>
       <BasicSider collapsed={collapsed} menus={menu} location={props.location.pathname} />
       <Layout>
         <HeaderPage collapsed={collapsed} toggle={toggle} />
@@ -68,8 +94,6 @@ const BasicLayout: React.FC = props => {
         <Content
           style={{
             margin: '24px 16px',
-            padding: 24,
-            background: '#fff',
             minHeight: 280,
           }}
         >
