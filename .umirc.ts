@@ -1,17 +1,24 @@
 import { IConfig } from "umi-types";
 
+
 // ref: https://umijs.org/config/
 const config: IConfig = {
   history: 'hash',
   treeShaking: true,
+  // "proxy": {
+  //   "/api": {
+  //     "target": "http://jsonplaceholder.typicode.com/",
+  //     "changeOrigin": true,
+  //     "pathRewrite": { "^/api" : "" }
+  //   }
+  // },
   routes: [
     {
       path: '/index',
-      icon: 'laptop',
       component: '../layouts/main/index',
       Routes: ['./src/routes/MainPrivateRoute.js'],
       routes: [
-        { path: '/index/home', component: '../pages/main/Home', icon: 'laptop', title: '首页' },
+        { path: '/index/home', component: '../pages/main/Home', icon: 'home', title: '首页' },
         {
           path: '/index/general', icon: 'laptop', title: '基本组件',
           routes: [
@@ -23,8 +30,11 @@ const config: IConfig = {
         },
 
         {
-          path: '/index/text', component: '../pages/main/index', icon: 'laptop', title: 'test', routes: [
-            { path: '/index/text/icon', component: '../pages/main/index', icon: '', title: 'test' },
+          path: '/index/navigation', icon: 'bars', title: '导航',
+          routes: [
+            { path: '/index/navigation/dropdown', component: '../pages/main/Navigation/DropdownDemo/index', icon: '', title: '下拉菜单' },
+            { path: '/index/navigation/menu', component: '../pages/main/Navigation/MenuDemo/index', icon: '', title: '导航菜单' },
+            { path: '/index/navigation/steps', component: '../pages/main/Navigation/StepsDemo/index', icon: '', title: '步骤条' },
           ]
         },
       ]
@@ -35,6 +45,13 @@ const config: IConfig = {
       routes: [
         { path: '/login', component: '../pages/login/index' },
       ]
+    },
+    {
+      path: '/*',
+      component: '../layouts/main/index',
+      routes: [
+        { path: '/login', component: '../pages/login/index' },
+      ]
     }
   ],
   plugins: [
@@ -42,10 +59,13 @@ const config: IConfig = {
     ['umi-plugin-react', {
       antd: true,
       dva: true,
-      dynamicImport: { webpackChunkName: true },
+      dynamicImport: {
+        webpackChunkName: true, 
+        loadingComponent: './layouts/components/PageLoading/index',
+        // level: 3,
+      },
       title: 'umi',
       dll: true,
-
       routes: {
         exclude: [
           /models\//,

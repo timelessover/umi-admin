@@ -11,11 +11,21 @@
   .header-ul {
     display: -webkit-flex;
     display: flex;
-    width: 200px;
+    width: 250px;
+    
+    :global {
+        .ant-badge{
+            height:30px;
+            width: 30px;
+        }
+    }
 
     >li {
         flex-grow: 1;
         text-align: center;
+        &:first-child{
+        text-align: right;
+    }
         >img {
             width: 40px;
             height: 40px;

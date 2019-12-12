@@ -88,7 +88,7 @@ const BasicLayout: React.FC = props => {
   return (
     <Layout style={{ minHeight: '100vh' }}>
       <BasicSider collapsed={collapsed} menus={menu} location={props.location.pathname} />
-      <Layout>
+      <Layout className={styles['layout']}>
         <HeaderPage collapsed={collapsed} toggle={toggle} />
         <BasicBreadcrumb arr={bread} />
         <Content

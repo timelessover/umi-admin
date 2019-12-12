@@ -8,7 +8,7 @@ const { Header } = Layout;
 const HeaderPage = (props) => {
     const { collapsed, toggle } = props
 
-    const avatar = 'https://avatars2.githubusercontent.com/u/34708197?s=460&v=4'
+    const avatar = require('../../../assets/img/defaultUser.jpg')
     const user = 'chris'
 
     const [count, setCount] = useState(100)

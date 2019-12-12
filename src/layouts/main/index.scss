@@ -1,6 +1,15 @@
-
 .logo {
   height: 32px;
   background: rgba(255, 255, 255, 0.2);
   margin: 16px;
+}
+
+.layout {
+  :global {
+    .card-item {
+      margin-bottom: 10px;
+      border-radius: 3px;
+      line-height: 2em;
+    }
+  }
 }
