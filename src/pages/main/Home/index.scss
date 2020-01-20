@@ -1,21 +1,21 @@
 // https://pro.ant.design/docs/style-cn
 // cssModules与antd冲突解决方案
 .home {
-    min-height: 280px;
-    background: #364d79;
+    // min-height: 280px;
+    background: #fff;
 
-    :global {
-        .ant-carousel {
-            min-height: 280px;
+    // :global {
+    //     .ant-carousel {
+    //         min-height: 280px;
 
-            .slick-slider {
-                text-align: center;
-                min-height: 280px;
-                background: #364d79;
-                overflow: hidden;
-            }
-        }
-    }
+    //         .slick-slider {
+    //             text-align: center;
+    //             min-height: 280px;
+    //             background: #364d79;
+    //             overflow: hidden;
+    //         }
+    //     }
+    // }
 }
 
 // .home .ant-carousel .slick-slide {

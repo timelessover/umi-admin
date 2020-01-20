@@ -4,7 +4,7 @@ import styles from './index.scss';
 import { connect } from 'dva';
 import Link from 'umi/link';
 import router from 'umi/router';
-import { post } from '../../../../utils/request'
+import { post } from 'utils/request'
 
 
 const RegisterForm = (props) => {
@@ -13,7 +13,7 @@ const RegisterForm = (props) => {
         e.preventDefault();
         props.form.validateFields((err, values) => {
             if (!err) {
-                post('register', values).then(res => {
+                post('/admin/register', values).then(res => {
                     if (res.status === 'ok') {
                         message.success('注册成功');
                         props.dispatch({ type: 'login/changeStatus', payload: { status: 0 } })

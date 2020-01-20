@@ -1,5 +1,5 @@
 import { fetch } from 'dva';
-const host = 'http://127.0.0.1:7001/'
+const host = 'http://127.0.0.1:7001'
 
 function checkStatus(response) {
     if (response.status >= 200 && response.status < 300) {

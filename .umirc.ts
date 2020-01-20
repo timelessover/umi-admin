@@ -1,4 +1,5 @@
 import { IConfig } from "umi-types";
+const path = require('path');
 
 
 // ref: https://umijs.org/config/
@@ -47,11 +48,8 @@ const config: IConfig = {
       ]
     },
     {
-      path: '/*',
-      component: '../layouts/main/index',
-      routes: [
-        { path: '/login', component: '../pages/login/index' },
-      ]
+      path: '/',
+      redirect: '/login',
     }
   ],
   plugins: [
@@ -60,7 +58,7 @@ const config: IConfig = {
       antd: true,
       dva: true,
       dynamicImport: {
-        webpackChunkName: true, 
+        webpackChunkName: true,
         loadingComponent: './layouts/components/PageLoading/index',
         // level: 3,
       },
@@ -77,6 +75,9 @@ const config: IConfig = {
       },
     }],
   ],
+  alias: {
+    utils: path.resolve(__dirname, 'src/utils'),
+  }
 }
 
 export default config;

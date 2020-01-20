@@ -1,6 +1,6 @@
 import React, { useEffect,useRef } from 'react'
 import {Card} from 'antd'
-import Typing from '../../../..//utils/typing.ts'
+import Typing from 'utils/typing.ts'
 
 
 const TypingCard = (userProps) => {
