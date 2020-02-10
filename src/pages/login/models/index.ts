@@ -10,11 +10,11 @@ export default {
     reducers: {
         changeStatus(state, { payload: { status } }) { return { status } },
     },
-    // effects: {
-    //     *login(action, { put, call }) {
-    //         const { payload } = action
-    //         const user = yield call(usersService.login, payload);
-    //         yield put({ type: 'updateUser', payload: { username: user.data.name } });
-    //     },
-    // }
+    effects: {
+        *login(action, { put, call }) {
+            const { payload } = action
+            const user = yield call(usersService.login, payload);
+            yield put({ type: 'updateUser', payload: { username: user.data.name } });
+        },
+    }
 };

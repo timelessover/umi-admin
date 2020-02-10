@@ -4,19 +4,20 @@ import styles from './index.scss';
 import { connect } from 'dva';
 import Link from 'umi/link';
 import router from 'umi/router';
+import {login} from '../../api'
 import { post } from 'utils/request'
 
 
 const RegisterForm = (props) => {
     const handleSubmit = e => {
         e.preventDefault();
-        props.form.validateFields((err, values) => {
+        props.form.validateFields(async (err, values) => {
             if (!err) {
-                post('/admin/login', values).then(res => {
+                const res = await login(values)
                     switch (res.code) {
                         case '0':
                             props.dispatch({ type: 'user/updateUser', payload: { username: res.name } })
-                            localStorage.setItem('token','Bearer ' + res.token)
+                            localStorage.setItem('token', JSON.stringify('Bearer ' + res.token))
                             router.push('/index/home')
                             break; 
                         case '1':
@@ -28,7 +29,6 @@ const RegisterForm = (props) => {
                         default:
                             break;
                     }
-                })
             }
         });
     };

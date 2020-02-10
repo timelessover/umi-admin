@@ -19,23 +19,22 @@ const config: IConfig = {
       component: '../layouts/main/index',
       Routes: ['./src/routes/MainPrivateRoute.js'],
       routes: [
-        { path: '/index/home', component: '../pages/main/Home', icon: 'home', title: '首页' },
+        { path: '/index/home', component: '../pages/main/Home', icon: 'home', title: '用户统计' },
         {
-          path: '/index/general', icon: 'laptop', title: '基本组件',
+          path: '/index/article', icon: 'laptop', title: '文章管理',
           routes: [
-            { path: '/index/general/icon', component: '../pages/main/General/IconDemo/index', icon: '', title: '图标' },
+            { path: '/index/article/edit',  component: '../pages/main/ArticleManagement/ArtcleEdit/index', icon: '', title: '文章编辑' },
+            { path: '/index/article/edit/:id', exclude:true, component: '../pages/main/ArticleManagement/ArtcleEdit/index', icon: '', title: '文章编辑' },
             {
-              path: '/index/general/button', component: '../pages/main/General/ButtonDemo/index', icon: '', title: '按钮'
+              path: '/index/article/list', component: '../pages/main/ArticleManagement/ArtcleList/index', icon: '', title: '文章列表'
             },
           ]
         },
 
         {
-          path: '/index/navigation', icon: 'bars', title: '导航',
+          path: '/index/navigation', icon: 'bars', title: '用户管理',
           routes: [
-            { path: '/index/navigation/dropdown', component: '../pages/main/Navigation/DropdownDemo/index', icon: '', title: '下拉菜单' },
-            { path: '/index/navigation/menu', component: '../pages/main/Navigation/MenuDemo/index', icon: '', title: '导航菜单' },
-            { path: '/index/navigation/steps', component: '../pages/main/Navigation/StepsDemo/index', icon: '', title: '步骤条' },
+            { path: '/index/navigation/dropdown', component: '../pages/main/Navigation/DropdownDemo/index', icon: '', title: '留言板信息' },
           ]
         },
       ]

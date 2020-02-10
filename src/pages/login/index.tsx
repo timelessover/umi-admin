@@ -25,7 +25,7 @@ const IndexPage = (props) => {
     <div className={styles.container}>
       <div className={styles['bg-color']} />
       <Card style={{ width: 300 }} hoverable={true}>
-        {props.status === 0 ? <LoginForm /> : <RegisterForm />}
+        <LoginForm />
       </Card>
     </div>
   );

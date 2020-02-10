@@ -6,11 +6,15 @@
     "test": "umi test",
     "lint:es": "eslint --ext .js src mock tests",
     "lint:ts": "tslint \"src/**/*.ts\" \"src/**/*.tsx\"",
-    "precommit": "lint-staged"
+    "precommit": "lint-staged",
+    "clean": "rm -rf node_modules"
   },
   "dependencies": {
     "antd": "^3.19.5",
     "dva": "^2.6.0-beta.6",
+    "echarts": "^4.6.0",
+    "echarts-for-react": "^2.0.15-beta.1",
+    "marked": "^0.8.0",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
     "react-router-breadcrumbs-hoc": "^3.2.4"
@@ -30,7 +34,7 @@
     "husky": "^0.14.3",
     "lint-staged": "^7.2.2",
     "mockjs": "^1.1.0",
-    "node-sass": "^4.13.0",
+    "node-sass": "^4.12.0",
     "nprogress": "^0.2.0",
     "react-test-renderer": "^16.7.0",
     "sass-loader": "^8.0.0",

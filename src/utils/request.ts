@@ -1,5 +1,5 @@
 import { fetch } from 'dva';
-const host = 'http://127.0.0.1:7001'
+const host = 'http://127.0.0.1:9000'
 
 function checkStatus(response) {
     if (response.status >= 200 && response.status < 300) {
@@ -29,7 +29,6 @@ export const post = async (url, params) => {
     }
 
     const response = await fetch(host + url, options);
-
     checkStatus(response);
 
     const data = await response.json();

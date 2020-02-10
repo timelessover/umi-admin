@@ -40,6 +40,7 @@ const BasicLayout: React.FC = props => {
     if (!routes) return;
     const result = []
     routes.map(item => {
+      if (item.exclude) return
       let temp = {}
       temp.path = item.path
       temp.icon = item.icon
@@ -60,8 +61,12 @@ const BasicLayout: React.FC = props => {
     const result = []
     const titleArr = []
     let index = 3 // 默认为3
+    
     const getTitle = (routes, path) => {
-      return routes.filter(item => item.path === path)[0]
+      return routes.filter(item => {
+  
+        if (!item.exclude) return item.path === path
+      })[0]
     }
     // 收集所有子标题所有父标题
     while (index <= lens) {
@@ -74,9 +79,11 @@ const BasicLayout: React.FC = props => {
     }
     // 筛选出每个标题的 title
     for (let i = 0; i < result.length; i++) {
-      const current = getTitle(routes, result[i])
-      titleArr.push(current.title)
-      routes = current.routes
+      if (routes){
+        const current = getTitle(routes, result[i])
+        titleArr.push(current.title)
+        routes = current.routes
+      }
     }
     if (titleArr[0] !== '首页') {
       setBread(titleArr)
