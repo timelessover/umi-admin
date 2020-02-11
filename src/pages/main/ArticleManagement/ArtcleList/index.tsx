@@ -62,12 +62,13 @@ const ArticleList = (props) => {
       content: '如果你点击OK按钮，文章将会永远被删除，无法恢复。',
       onOk: async()=> {
         const res = await deleteArticle({ id })
+        message.success('删除成功')
         if(!res.code){
           fetchList()
         }
       },
       onCancel() {
-        message.success('删除成功')
+        message.success('取消成功')
       },
     });
   }
@@ -79,24 +80,29 @@ const ArticleList = (props) => {
     },
     {
       title: '类别',
-      dataIndex: 'tag_type',
+      dataIndex: 'category[0].name',
     },
     {
       title: '最近修改时间',
       dataIndex: 'update_time',
     },
     {
+      title: '点赞数',
+      dataIndex: 'likes_count',
+    },
+    {
       title: '浏览量',
       dataIndex: 'view_count',
     },
+   
    
     {
       title: '操作',
       render: (text, record) => (
         <span>
-          <Button type="primary" onClick={() => handleUpdateArticle((record.article_id))}>修改</Button>
+          <Button type="primary" onClick={() => handleUpdateArticle((record._id))}>修改</Button>
           <Divider type="vertical" />
-          <Button type="danger" onClick={() => handleDeleteArticle(record.article_id)}>删除 </Button>
+          <Button type="danger" onClick={() => handleDeleteArticle(record._id)}>删除 </Button>
         </span>
       )
     },
@@ -104,7 +110,7 @@ const ArticleList = (props) => {
 
   return (
     <div style={{ background: '#fff'}}>
-      <Table dataSource={list} columns={columns} rowKey="article_id"/>
+      <Table dataSource={list} columns={columns} rowKey="_id"/>
     </div>
   )
 

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import marked from 'marked'
 import './style.scss'
 import { Row, Col, Select, message, Form, Icon, Input, Button } from 'antd'
-import { addArticle, getArticleById, updateArticle } from '../../api'
+import { addArticle, getArticleById, updateArticle, getCategories } from '../../api'
 import router from 'umi/router';
 
 const { Option } = Select;
@@ -29,7 +29,7 @@ const ArtcleEdit = (props) => {
     props.form.validateFields(async (err, values) => {
       if (!err) {
         if (articleId){
-          values.article_id = articleId
+          values._id = articleId
           const res = await updateArticle(values);
           message.success("更新成功")
         }else{
@@ -42,12 +42,13 @@ const ArtcleEdit = (props) => {
 
   const [articleId, setArticleId] = useState(0)  // 文章的ID，如果是0说明是新增加，如果不是0，说明是修改
   const [articleTitle, setArticleTitle] = useState('')  // 文章的ID，如果是0说明是新增加，如果不是0，说明是修改
+
   const [articleContent, setArticleContent] = useState('')  //markdown的编辑内容
   const [markdownContent, setMarkdownContent] = useState('预览内容') //html内容
   const [introducemd, setIntroducemd] = useState()            //简介的markdown内容
   const [introducehtml, setIntroducehtml] = useState('等待编辑') //简介的html内容
-  const [typeInfo, setTypeInfo] = useState([]) // 文章类别信息
-  const [selectedType, setSelectType] = useState('3') //选择的文章类别
+  const [catatype,setCatatype ] = useState('')
+  const [cataInfo, setCataInfo] = useState([]) // 文章类别信息
 
 
   const changeContent = (e) => {
@@ -60,17 +61,27 @@ const ArtcleEdit = (props) => {
     setIntroducehtml(marked(e.target.value))
   }
 
+  const hanleDirectoryManagement = () => {
+    router.push('/index/article/directory')
+  }
+
   const fetchArticle = async (id) => {
     const res = await getArticleById(id)
+    setCatatype(res.category[0].name)
     setArticleTitle(res.title)
     setArticleContent(res.content)
     setMarkdownContent(marked(res.content))
     setIntroducemd(res.introduce)
     setIntroducehtml(marked(res.introduce))
-    setSelectType(res.tag_type)
+  }
+
+  const fetchCata = async () => {
+    const res = await getCategories()
+    setCataInfo(res)
   }
 
   useEffect(() => {
+    fetchCata()
     //获得文章ID
     let tmpId = props.match.params.id
     if (tmpId) {
@@ -81,7 +92,7 @@ const ArtcleEdit = (props) => {
 
 
   return (
-    <Form onSubmit={handleSubmit} className="login-form">
+    <Form onSubmit={handleSubmit} >
       <Row gutter={5}>
         <Col span={18}>
           <Row gutter={10} >
@@ -89,7 +100,7 @@ const ArtcleEdit = (props) => {
               <Form.Item>
                 {getFieldDecorator('title', {
                   initialValue: articleTitle,
-                  rules: [{ required: true, message: articleTitle }],
+                  rules: [{ required: true, message: '请输入博客标题' }],
                 })(
                   <Input
                     placeholder="博客标题"
@@ -98,15 +109,14 @@ const ArtcleEdit = (props) => {
                 )}
               </Form.Item>
             </Col>
-            <Col span={4}>
+            <Col span={2}>
               <Form.Item  >
-                {getFieldDecorator('tag_type', {
-                  initialValue: selectedType,
+                {getFieldDecorator('category', {
+                  initialValue: articleId ? catatype : cataInfo[0] && cataInfo[0].name ,
+                  rules: [{ required: true, message: '请选择文集' }]
                 })(
                   <Select>
-                    <Option value="1">Option 1</Option>
-                    <Option value="2">Option 2</Option>
-                    <Option value="3">Option 3</Option>
+                    {cataInfo.map(item => <Option value={item._id} key={item._id}>{item.name}</Option>)}
                   </Select>
                 )}
               </Form.Item>
@@ -118,7 +128,7 @@ const ArtcleEdit = (props) => {
               <Form.Item>
                 {getFieldDecorator('content', {
                   initialValue: articleContent,
-                  rules: [{ required: true, message: articleContent }],
+                  rules: [{ required: true, message: '请输入文章内容' }],
                 })(
                   <TextArea
                     className="markdown-content"
@@ -148,13 +158,13 @@ const ArtcleEdit = (props) => {
               <Form.Item>
                 {getFieldDecorator('introduce', {
                   initialValue: introducemd,
-                  rules: [{ required: true, message: introducemd }],
+                  rules: [{ required: true, message: "请输入文章简介" }],
                 })(
                   <TextArea
                     rows={4}
                     onChange={changeIntroduce}
                     onPressEnter={changeIntroduce}
-                    placeholder="文章简介"
+                    placeholder="请输入文章文章简介,小于20字"
                   />
 
                 )}

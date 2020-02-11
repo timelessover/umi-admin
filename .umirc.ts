@@ -26,8 +26,12 @@ const config: IConfig = {
             { path: '/index/article/edit',  component: '../pages/main/ArticleManagement/ArtcleEdit/index', icon: '', title: '文章编辑' },
             { path: '/index/article/edit/:id', exclude:true, component: '../pages/main/ArticleManagement/ArtcleEdit/index', icon: '', title: '文章编辑' },
             {
-              path: '/index/article/list', component: '../pages/main/ArticleManagement/ArtcleList/index', icon: '', title: '文章列表'
+              path: '/index/article/articlelist', component: '../pages/main/ArticleManagement/ArtcleList/index', icon: '', title: '文章列表'
             },
+            {
+              path: '/index/article/directory', component: '../pages/main/ArticleManagement/DirectoryManagement/index', icon: '', title: '文集列表'
+            },
+            
           ]
         },
 
