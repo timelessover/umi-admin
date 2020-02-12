@@ -52,12 +52,10 @@ const ArtcleEdit = (props) => {
 
 
   const changeContent = (e) => {
-    setArticleContent(e.target.value)
     setMarkdownContent(marked(e.target.value))
   }
 
   const changeIntroduce = (e) => {
-    setIntroducemd(e.target.value)
     setIntroducehtml(marked(e.target.value))
   }
 
@@ -112,7 +110,7 @@ const ArtcleEdit = (props) => {
             <Col span={2}>
               <Form.Item  >
                 {getFieldDecorator('category', {
-                  initialValue: articleId ? catatype : cataInfo[0] && cataInfo[0].name ,
+                  initialValue: articleId ? catatype : cataInfo[0] && cataInfo[0]._id ,
                   rules: [{ required: true, message: '请选择文集' }]
                 })(
                   <Select>

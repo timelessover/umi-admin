@@ -79,6 +79,10 @@ const ArticleList = (props) => {
       
     },
     {
+      title: '简介',
+      dataIndex: 'introduce',
+    },
+    {
       title: '类别',
       dataIndex: 'category[0].name',
     },

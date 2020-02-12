@@ -30,3 +30,15 @@ export const getCategories = () => {
     return get('/api/admin/categories')
 }
 
+
+export const getCategoryById = (params: any) => {
+    return post('/api/admin/getCategoryById' , params)
+}
+
+export const updateCategory = (params: any) => {
+    return post('/api/admin/category/update', params)
+}
+
+
+
+

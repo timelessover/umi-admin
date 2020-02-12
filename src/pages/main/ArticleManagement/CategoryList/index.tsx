@@ -2,8 +2,9 @@
 import React, { useState, useEffect } from 'react';
 import styles from './style.scss';
 import {
-  Table, Row, Col, Modal, message, Button, Modal, Tag, Divider, message, Form, Input} from 'antd';
-import { getCategories, deleteCategory,addCategory } from '../../api'
+  Table, Row, Col, Modal, message, Button, Modal, Tag, Divider, message, Form, Input
+} from 'antd';
+import { getCategories, deleteCategory, addCategory, getCategoryById, updateCategory } from '../../api'
 import { timestampToTime } from 'utils/utils'
 import router from 'umi/router';
 
@@ -42,11 +43,15 @@ const data = [
   },
 ];
 
-const ArticleList = (props) => {
+const CategoryList = (props) => {
 
-  const [list, setList] = useState([])
-  const [visible, setVisible] = useState(false)
-  const [loading, setLoading] = useState(false)
+  const [list, setList] = useState([]) // 文章列表
+  const [visible, setVisible] = useState(false) // 模态框显示
+  const [loading, setLoading] = useState(false) // 请求loading
+  const [isModify, setIsModify] = useState(false) // 是否为修改
+  const [cateName, setCateName] = useState('22')
+  const [cateDesc, setCateDesc] = useState('33') 
+  const [cateId, setCateId] = useState('')
 
   const fetchList = async () => {
     const res = await getCategories()
@@ -58,28 +63,49 @@ const ArticleList = (props) => {
 
   useEffect(() => {
     fetchList()
+    fetchCategory()
   }, [])
 
-  const handleUpdateArticle = id => {
-    router.push('/index/article/edit/' + id)
-  }
 
-  const handleDeleteArticle = async (id) => {
+  const handleDeleteCategory = async (id) => {
     confirm({
       title: '确定要删除这篇博客文章吗?',
       content: '如果你点击OK按钮，文章将会永远被删除，无法恢复。',
       onOk: async () => {
-        const res = await deleteCategory( {_id:id} )
+        const res = await deleteCategory({ _id: id })
         message.success('删除成功')
         if (!res.code) {
           fetchList()
         }
       },
       onCancel() {
-        message.success('取消成功')
+        message.fail('操作取消')
       },
     });
   }
+
+  const fetchCategory = async() => {
+      const res = await getCategoryById({ _id: '5e43b40f0edbeb2e60896c7c' })
+      console.log(res)
+      setCateName('222')
+      setCateDesc('333')
+  }
+
+  
+
+  const handleModify =  (id) => {
+    console.log(cateName)
+    setCateId(id)
+    console.log(cateId)
+    setIsModify(true)
+    setVisible(true)
+  }
+
+  const handleAdd = () => {
+    setIsModify(false)
+    setVisible(true)
+  }
+
   const columns = [
     {
       title: '名称',
@@ -90,6 +116,10 @@ const ArticleList = (props) => {
       dataIndex: 'desc',
     },
     {
+      title: '文章数量',
+      dataIndex: 'article_num',
+    },
+    {
       title: '创建时间',
       dataIndex: 'update_time',
     },
@@ -98,40 +128,47 @@ const ArticleList = (props) => {
       title: '操作',
       render: (text, record) => (
         <span>
-          <Button type="primary" onClick={() => handleUpdateArticle((record._id))}>修改</Button>
+          <Button type="primary" onClick={() => handleModify(record._id)}>修改</Button>
           <Divider type="vertical" />
-          <Button type="danger" onClick={() => handleDeleteArticle(record._id)}>删除</Button>
+          <Button type="danger" onClick={() => handleDeleteCategory(record._id)}>删除</Button>
         </span>
       )
     },
   ];
 
-  useEffect(()=>{
+  useEffect(() => {
     props.form.validateFields();
-  },[])
+  }, [])
 
-  const handleSubmit = e => {
+  const handleAddSubmit = e => {
     e.preventDefault();
     props.form.validateFields(async (err, values) => {
       if (!err) {
-        setLoading(true)
+        setAddCateLoading(true)
         const res = await addCategory(values)
-        setVisible(false)
         setLoading(false)
+        setAddCateLoading(false)
         fetchList()
-        console.log('Received values of form: ', values);
       }
     });
   };
 
-  const showModal = () => {
-    setVisible(true)
+  const handleModifySubmit = e => {
+    e.preventDefault();
+    props.form.validateFields(async (err, values) => {
+      if (!err) {
+        console.log('修改', values)
+        values._id = cateId
+        setLoading(true)
+        const res = await updateCategory(values)
+        setLoading(false)
+        fetchList()
+      }
+    });
   };
 
 
-  const handleCancel = () => {
-    setVisible(false)
-  };
+
   const { getFieldDecorator, getFieldsError, getFieldError, isFieldTouched } = props.form;
 
   // Only show error after a field is touched.
@@ -140,19 +177,20 @@ const ArticleList = (props) => {
 
   return (
     <div style={{ background: '#fff' }}>
-      <Button type="primary" onClick={showModal} className={styles["add_btn"]}>增加选集</Button>
+      <Button type="primary" onClick={handleAdd} className={styles["add_btn"]}>增加选集</Button>
       <Table dataSource={list} columns={columns} rowKey="_id" />
 
 
       <Modal
         visible={visible}
-        title="Title"
-        onCancel={handleCancel}
-        footer={null}	
+        title={isModify ? "修改文集"  : "添加文集"}
+        onCancel={() => setVisible(false)}
+        footer={null}
       >
-        <Form onSubmit={handleSubmit}>
+        <Form onSubmit={isModify ? handleModifySubmit :  handleAddSubmit}>
           <Form.Item validateStatus={direcotyError ? 'error' : ''} help={direcotyError || ''}>
-            {getFieldDecorator('name', {
+            {getFieldDecorator( 'name', {
+              initialValue:  cateId ? cateName : '',
               rules: [{ required: true, message: '请输入文集名称' }],
             })(
               <Input
@@ -162,18 +200,19 @@ const ArticleList = (props) => {
             )}
           </Form.Item>
           <Form.Item validateStatus={descyError ? 'error' : ''} help={descyError || ''}>
-          {getFieldDecorator('desc', {
-            rules: [{ required: true, message: '请输入描述' }],
-          })(
-            <TextArea
-              placeholder="请输入描述"
-            />,
-          )}
+            {getFieldDecorator('desc', {
+              initialValue: cateId ? cateDesc : '',
+              rules: [{ required: true, message: '请输入描述' }]
+            })(
+              <TextArea
+                placeholder="请输入描述"
+              />,
+            )}
           </Form.Item>
           <Form.Item>
-            <Button type="primary" htmlType="submit" size="large" loading={loading}  className={styles['submit_btn']} disabled={hasErrors(getFieldsError())}>
+            <Button type="primary" htmlType="submit" size="large" loading={loading} className={styles['submit_btn']} disabled={hasErrors(getFieldsError())}>
               确定
-          </Button>
+            </Button>
           </Form.Item>
         </Form>
       </Modal>
@@ -182,4 +221,4 @@ const ArticleList = (props) => {
 
 }
 
-export default Form.create({ name: 'directory' })(ArticleList);
+export default Form.create({ name: 'category' })(CategoryList);

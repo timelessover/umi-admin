@@ -29,7 +29,7 @@ const config: IConfig = {
               path: '/index/article/articlelist', component: '../pages/main/ArticleManagement/ArtcleList/index', icon: '', title: '文章列表'
             },
             {
-              path: '/index/article/directory', component: '../pages/main/ArticleManagement/DirectoryManagement/index', icon: '', title: '文集列表'
+              path: '/index/article/category', component: '../pages/main/ArticleManagement/CategoryList/index', icon: '', title: '文集列表'
             },
             
           ]
