@@ -49,8 +49,8 @@ const CategoryList = (props) => {
   const [visible, setVisible] = useState(false) // 模态框显示
   const [loading, setLoading] = useState(false) // 请求loading
   const [isModify, setIsModify] = useState(false) // 是否为修改
-  const [cateName, setCateName] = useState('22')
-  const [cateDesc, setCateDesc] = useState('33') 
+  const [cateName, setCateName] = useState('')
+  const [cateDesc, setCateDesc] = useState('')
   const [cateId, setCateId] = useState('')
 
   const fetchList = async () => {
@@ -61,9 +61,9 @@ const CategoryList = (props) => {
     setList(res)
   }
 
+
   useEffect(() => {
     fetchList()
-    fetchCategory()
   }, [])
 
 
@@ -84,21 +84,22 @@ const CategoryList = (props) => {
     });
   }
 
-  const fetchCategory = async() => {
-      const res = await getCategoryById({ _id: '5e43b40f0edbeb2e60896c7c' })
+  const fetchCategory = async (id) => {
+      const res = await getCategoryById({ _id: id })
       console.log(res)
-      setCateName('222')
-      setCateDesc('333')
+      setCateName(res.name)
+      setCateDesc(res.desc)
   }
 
-  
 
-  const handleModify =  (id) => {
-    console.log(cateName)
+
+  const handleModify = (id) => {
+    console.log(id)
     setCateId(id)
-    console.log(cateId)
+    fetchCategory(id)
     setIsModify(true)
     setVisible(true)
+
   }
 
   const handleAdd = () => {
@@ -129,26 +130,25 @@ const CategoryList = (props) => {
       render: (text, record) => (
         <span>
           <Button type="primary" onClick={() => handleModify(record._id)}>修改</Button>
-          <Divider type="vertical" />
-          <Button type="danger" onClick={() => handleDeleteCategory(record._id)}>删除</Button>
+          {/* <Divider type="vertical" /> */}
+          {/* <Button type="danger" onClick={() => handleDeleteCategory(record._id)}>删除</Button> */}
         </span>
       )
     },
   ];
 
-  useEffect(() => {
-    props.form.validateFields();
-  }, [])
+ 
 
   const handleAddSubmit = e => {
     e.preventDefault();
     props.form.validateFields(async (err, values) => {
       if (!err) {
-        setAddCateLoading(true)
+        setLoading(true)
         const res = await addCategory(values)
         setLoading(false)
-        setAddCateLoading(false)
+        setVisible(false)
         fetchList()
+        message.success('添加成功')
       }
     });
   };
@@ -157,23 +157,21 @@ const CategoryList = (props) => {
     e.preventDefault();
     props.form.validateFields(async (err, values) => {
       if (!err) {
-        console.log('修改', values)
+        // console.log('修改', values)
         values._id = cateId
         setLoading(true)
         const res = await updateCategory(values)
         setLoading(false)
+        setVisible(false)
         fetchList()
+        message.success('修改成功')
       }
     });
   };
 
 
 
-  const { getFieldDecorator, getFieldsError, getFieldError, isFieldTouched } = props.form;
-
-  // Only show error after a field is touched.
-  const direcotyError = isFieldTouched('name') && getFieldError('name');
-  const descyError = isFieldTouched('desc') && getFieldError('desc');
+  const { getFieldDecorator } = props.form;
 
   return (
     <div style={{ background: '#fff' }}>
@@ -183,14 +181,14 @@ const CategoryList = (props) => {
 
       <Modal
         visible={visible}
-        title={isModify ? "修改文集"  : "添加文集"}
+        title={isModify ? "修改文集" : "添加文集"}
         onCancel={() => setVisible(false)}
         footer={null}
       >
-        <Form onSubmit={isModify ? handleModifySubmit :  handleAddSubmit}>
-          <Form.Item validateStatus={direcotyError ? 'error' : ''} help={direcotyError || ''}>
-            {getFieldDecorator( 'name', {
-              initialValue:  cateId ? cateName : '',
+        <Form onSubmit={isModify ? handleModifySubmit : handleAddSubmit}>
+          <Form.Item >
+            {getFieldDecorator('name', {
+              initialValue: isModify ? cateName : '',
               rules: [{ required: true, message: '请输入文集名称' }],
             })(
               <Input
@@ -199,9 +197,9 @@ const CategoryList = (props) => {
               />,
             )}
           </Form.Item>
-          <Form.Item validateStatus={descyError ? 'error' : ''} help={descyError || ''}>
+          <Form.Item >
             {getFieldDecorator('desc', {
-              initialValue: cateId ? cateDesc : '',
+              initialValue: isModify ? cateDesc : '',
               rules: [{ required: true, message: '请输入描述' }]
             })(
               <TextArea
@@ -210,7 +208,7 @@ const CategoryList = (props) => {
             )}
           </Form.Item>
           <Form.Item>
-            <Button type="primary" htmlType="submit" size="large" loading={loading} className={styles['submit_btn']} disabled={hasErrors(getFieldsError())}>
+            <Button type="primary" htmlType="submit" size="large" loading={loading} className={styles['submit_btn']}>
               确定
             </Button>
           </Form.Item>

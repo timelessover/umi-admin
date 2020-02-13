@@ -150,7 +150,6 @@ const ArtcleEdit = (props) => {
         <Col span={6}>
           <Row>
             <Col span={24}>
-              <Button size="large">暂存文章</Button>&nbsp;
               <Button type="primary" size="large" htmlType="submit">发布文章</Button>
               <br />
               <Form.Item>
